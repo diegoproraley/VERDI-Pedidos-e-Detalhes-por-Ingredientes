@@ -1,0 +1,9 @@
+{
+  "name": "danielli-kits",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cadastro dos Kits — Planilha da Danielli. Site estático + funções serverless na Vercel.",
+  "dependencies": {
+    "@upstash/redis": "^1.34.0"
+  }
+}

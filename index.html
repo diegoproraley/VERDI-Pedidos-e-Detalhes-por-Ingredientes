@@ -1,0 +1,1504 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cadastro dos Kits</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  [hidden] { display: none !important; }
+  img { max-width: 100%; }
+  :root {
+    --bg: #f4f6ee;
+    --surface: #ffffff;
+    --surface-2: #edf0e3;
+    --ink: #202b1a;
+    --ink-soft: #5f6b54;
+    --ink-faint: #97a08a;
+    --accent: #d9641f;
+    --accent-ink: #fffaf4;
+    --line: #dfe4d3;
+    --good: #4f7a3d;
+    --good-bg: #e6efdd;
+    --muted: #8b9280;
+    --muted-bg: #e9ebe0;
+    --shadow: 0 1px 2px rgba(32, 43, 26, 0.06), 0 6px 20px -8px rgba(32, 43, 26, 0.12);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141a10;
+      --surface: #1d2417;
+      --surface-2: #242c1c;
+      --ink: #edf1e3;
+      --ink-soft: #b3bba3;
+      --ink-faint: #78806a;
+      --accent: #f0813f;
+      --accent-ink: #1b1006;
+      --line: #303a26;
+      --good: #86c467;
+      --good-bg: #223321;
+      --muted: #838a76;
+      --muted-bg: #232a1c;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #141a10;
+    --surface: #1d2417;
+    --surface-2: #242c1c;
+    --ink: #edf1e3;
+    --ink-soft: #b3bba3;
+    --ink-faint: #78806a;
+    --accent: #f0813f;
+    --accent-ink: #1b1006;
+    --line: #303a26;
+    --good: #86c467;
+    --good-bg: #223321;
+    --muted: #838a76;
+    --muted-bg: #232a1c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono {
+    font-family: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1, .display {
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 18px 64px;
+  }
+
+  /* ---------- Masthead ---------- */
+
+  .masthead {
+    padding: 36px 0 20px;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 8px;
+  }
+
+  h1 {
+    font-size: clamp(30px, 7vw, 42px);
+    font-weight: 600;
+    font-optical-sizing: auto;
+    margin: 0 0 10px;
+    line-height: 1.05;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+
+  .lede {
+    font-size: 15px;
+    color: var(--ink-soft);
+    max-width: 56ch;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 22px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .stat .n {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat .l {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ---------- Controls ---------- */
+
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--bg);
+    padding: 14px 0 12px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-field {
+    position: relative;
+  }
+
+  .search-field svg {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--ink-faint);
+    pointer-events: none;
+  }
+
+  #search {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 11px 14px 11px 38px;
+    font-size: 15px;
+    color: var(--ink);
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  #search::placeholder { color: var(--ink-faint); }
+
+  #search:focus {
+    border-color: var(--accent);
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .chips {
+    display: flex;
+    gap: 6px;
+  }
+
+  .chip {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 13px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .chip[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  .result-count {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .hint {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    line-height: 1.5;
+    margin: 2px 0 0;
+  }
+
+  /* ---------- Tabs ---------- */
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin: 20px 0 -2px;
+  }
+
+  /* ---------- Ingredient summary ---------- */
+
+  .sum-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .sum-row {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .sum-row-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    cursor: pointer;
+  }
+
+  .sum-name {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .sum-name .ing {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .sum-name .corte {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-top: 1px;
+  }
+
+  .sum-name .used {
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .sum-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .sum-total {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sum-chevron {
+    width: 14px;
+    height: 14px;
+    color: var(--ink-faint);
+    transition: transform 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .sum-row.open .sum-chevron { transform: rotate(180deg); }
+
+  .sum-breakdown {
+    display: none;
+    border-top: 1px solid var(--line);
+    background: var(--surface-2);
+    padding: 2px 16px 6px;
+  }
+
+  .sum-row.open .sum-breakdown { display: block; }
+
+  .bd-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 12.5px;
+    border-top: 1px solid var(--line);
+  }
+
+  .bd-row:first-child { border-top: none; }
+
+  .bd-kit { color: var(--ink-soft); min-width: 0; }
+  .bd-kit b { color: var(--ink); font-weight: 600; }
+  .bd-cut { color: var(--ink-faint); }
+
+  .bd-corte-group { margin-top: 10px; }
+  .bd-corte-group:first-child { margin-top: 4px; }
+
+  .bd-corte-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2px;
+    padding: 7px 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+  }
+
+  .bd-corte-total {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--accent);
+    text-transform: none;
+    letter-spacing: 0;
+    flex-shrink: 0;
+  }
+
+  .bd-corte-group .bd-row { padding-left: 10px; }
+
+  .bd-val {
+    font-family: "IBM Plex Mono", monospace;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* ---------- Grid & cards ---------- */
+
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-head {
+    background: var(--surface-2);
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .card-head-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .code {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--accent);
+    color: var(--accent-ink);
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .status {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .status.on { background: var(--good-bg); color: var(--good); }
+  .status.off { background: var(--muted-bg); color: var(--muted); }
+
+  .produto {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 8px 0 0;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+
+  .produto .miss {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    display: block;
+    margin-top: 3px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .meta-line {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--ink-faint);
+    display: flex;
+    gap: 10px;
+  }
+
+  .col-labels {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px 4px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+  }
+
+  .col-labels .r {
+    display: flex;
+    gap: 14px;
+  }
+  .col-labels .r span { width: 40px; text-align: right; }
+
+  .items {
+    padding: 0 16px 8px;
+  }
+
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .item:first-child { border-top: none; }
+
+  .item-name {
+    min-width: 0;
+  }
+
+  .item-name .ing {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    display: block;
+  }
+
+  .item-name .corte {
+    font-size: 12px;
+    color: var(--ink-faint);
+    display: block;
+    margin-top: 1px;
+  }
+
+  mark {
+    background: color-mix(in srgb, var(--accent) 30%, transparent);
+    color: inherit;
+    border-radius: 3px;
+    padding: 0 1px;
+  }
+
+  .item-stats {
+    display: flex;
+    gap: 14px;
+    flex-shrink: 0;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .item-stats span {
+    width: 40px;
+    text-align: right;
+    color: var(--ink-soft);
+  }
+
+  .item-stats .tot {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ---------- Empty state ---------- */
+
+  #empty {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-faint);
+  }
+
+  #empty .display {
+    font-size: 20px;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+
+  /* ---------- Footer ---------- */
+
+  .foot {
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .glossary {
+    font-size: 12px;
+    color: var(--ink-faint);
+    line-height: 1.6;
+  }
+
+  .notice {
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 13px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .notice svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--accent);
+  }
+
+  .notice b { color: var(--ink); }
+
+  /* ---------- Toolbar / actions ---------- */
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 16px 0 4px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    padding: 9px 16px;
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    transition: filter 0.15s ease, opacity 0.15s ease;
+  }
+
+  .btn:hover { filter: brightness(0.97); }
+  .btn:disabled { opacity: 0.55; cursor: default; }
+
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .btn-danger {
+    background: var(--surface);
+    border-color: #d99a1f4d;
+    color: #b5460f;
+  }
+
+  :root:not([data-theme="light"]) .btn-danger { color: #ff9a6b; }
+  :root[data-theme="dark"] .btn-danger { color: #ff9a6b; }
+
+  .toolbar-status {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+  }
+
+  .confirm-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 13px;
+    margin: 6px 0;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+
+  .confirm-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .confirm-actions .btn { padding: 6px 12px; font-size: 12.5px; }
+
+  /* ---------- Modal: Lançar pedido ---------- */
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 26, 16, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 20;
+  }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    width: min(560px, 100%);
+    max-height: min(720px, 90vh);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px 4px;
+  }
+
+  .modal-head h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 4px 6px;
+  }
+
+  .modal-hint {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 4px 18px 10px;
+  }
+
+  .modal-search {
+    margin: 0 18px 10px;
+  }
+
+  .modal-list {
+    overflow-y: auto;
+    padding: 0 18px;
+    flex: 1;
+    border-top: 1px solid var(--line);
+  }
+
+  .modal-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .modal-item-name {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+
+  .code-sm {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--ink-faint);
+  }
+
+  .mi-produto {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .mi-current {
+    font-size: 11px;
+    color: var(--good);
+  }
+
+  .stepper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .step-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .step-btn:hover { filter: brightness(0.96); }
+
+  .step-val {
+    min-width: 18px;
+    text-align: center;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .modal-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 18px 16px;
+    border-top: 1px solid var(--line);
+  }
+
+  .modal-count {
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  .modal-actions { display: flex; gap: 8px; }
+
+  @media (max-width: 420px) {
+    .stat-row { gap: 16px; }
+    .produto { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <p class="eyebrow">Planilha da Danielli &middot; Cadastro dos Kits</p>
+    <h1>O que entra em cada kit</h1>
+    <p class="lede">Catálogo completo dos kits de legumes: ingredientes, corte, peso por unidade e total de produção &mdash; e quanto cada ingrediente soma somando todos os kits. Toque em <span class="mono">buscar</span> para achar um kit ou ingrediente específico.</p>
+    <div class="stat-row">
+      <div class="stat"><span class="n" id="statKits">&ndash;</span><span class="l">kits cadastrados</span></div>
+      <div class="stat"><span class="n" id="statIng">&ndash;</span><span class="l">ingredientes distintos</span></div>
+      <div class="stat"><span class="n" id="statAtivos">&ndash;</span><span class="l">em produção hoje</span></div>
+    </div>
+  </header>
+
+  <div class="tabs" id="tabs">
+    <button class="chip" data-view="kits" aria-pressed="true">Kits</button>
+    <button class="chip" data-view="summary" aria-pressed="false">Resumo de ingredientes</button>
+  </div>
+
+  <div class="toolbar" id="toolbar" hidden>
+    <button class="btn btn-primary" id="btnLancar" type="button">+ Lançar pedido</button>
+    <button class="btn btn-danger" id="btnZerar" type="button">Zerar produção do dia</button>
+    <span class="toolbar-status" id="toolbarStatus" aria-live="polite"></span>
+  </div>
+  <div class="confirm-bar" id="confirmZerar" hidden>
+    <span>Zerar todos os kits em produção hoje? Isso não afeta o cadastro, só as quantidades do dia.</span>
+    <div class="confirm-actions">
+      <button class="btn" id="confirmZerarCancel" type="button">Cancelar</button>
+      <button class="btn btn-danger" id="confirmZerarOk" type="button">Sim, zerar</button>
+    </div>
+  </div>
+  <p class="hint" id="readonlyHint" hidden>Esta visualização está em modo somente leitura &mdash; peça para reabrir a ferramenta a partir do link publicado por quem administra para lançar pedidos ou zerar a produção.</p>
+
+  <div class="controls">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="Buscar por kit ou ingrediente&hellip;" autocomplete="off">
+    </div>
+    <div class="chip-row">
+      <div class="chips" id="filters">
+        <button class="chip" data-filter="all" aria-pressed="false">Todos</button>
+        <button class="chip" data-filter="on" aria-pressed="true">Em produção</button>
+        <button class="chip" data-filter="off" aria-pressed="false">Zerados</button>
+      </div>
+      <span class="result-count" id="count"></span>
+    </div>
+    <p class="hint" id="summaryHint" hidden>Grafias diferentes do mesmo ingrediente (ex.: &ldquo;Alface crespa&rdquo; e &ldquo;Alface Crespa&rdquo;) aparecem em cards separados. Dentro de cada ingrediente, cortes que só variam em concordância de gênero (Ralada/Ralado, Picada/Picado...) já vêm somados no mesmo grupo.</p>
+  </div>
+
+  <div id="kitsView">
+    <div id="grid"></div>
+    <div id="empty">
+      <p class="display">Nenhum resultado</p>
+      <p>Tente outro termo de busca.</p>
+    </div>
+  </div>
+
+  <div id="summaryView" hidden>
+    <div class="sum-list" id="sumList"></div>
+    <div id="sumEmpty" style="display:none; text-align:center; padding:60px 20px; color:var(--ink-faint);">
+      <p class="display" style="font-size:20px; color:var(--ink-soft); margin-bottom:6px;">Nenhum resultado</p>
+      <p>Tente outro termo de busca.</p>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span><b>P010</b> aparece como &ldquo;Código não encontrado&rdquo; &mdash; esse código não está cadastrado na aba Produção do Dia. <b>Salada tradicional 2 (P029)</b> já tem quantidade lançada mas ainda não tem ingredientes cadastrados na aba Cadastro dos Kits. E <b>P038&ndash;P041</b> (Mandioca 1kg, Manga/abacaxi/maracujá, Cenoura ralada 250g, Mix 5 cores 250g) foram criados a partir de pedidos que não tinham kit correspondente &mdash; corte e composição ainda por confirmar.</span>
+    </div>
+    <p class="glossary"><b>g/un</b> gramas por unidade &nbsp;&middot;&nbsp; <b>qtd</b> quantidade de produção &nbsp;&middot;&nbsp; <b>total</b> total em gramas para a produção do dia</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Lançar pedido">
+    <div class="modal-head">
+      <h2>Lançar pedido</h2>
+      <button class="modal-close" id="modalClose" type="button" aria-label="Fechar">&times;</button>
+    </div>
+    <p class="modal-hint">Informe a quantidade de cada item do pedido. Isso <b>soma</b> às quantidades já em produção hoje &mdash; não substitui.</p>
+    <div class="search-field modal-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="modalSearch" type="text" placeholder="Buscar produto ou código&hellip;" autocomplete="off">
+    </div>
+    <div class="modal-list" id="modalList"></div>
+    <div class="modal-foot">
+      <span class="modal-count" id="modalCount"></span>
+      <div class="modal-actions">
+        <button class="btn" id="modalCancel" type="button">Cancelar</button>
+        <button class="btn btn-primary" id="modalSubmit" type="button">Lançar pedido</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="passOverlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Senha de administrador" style="width:min(360px,100%);">
+    <div class="modal-head">
+      <h2>Senha</h2>
+      <button class="modal-close" id="passCancel" type="button" aria-label="Fechar">&times;</button>
+    </div>
+    <p class="modal-hint">Digite a senha de administrador para lançar pedidos ou zerar a produção. Ela fica salva só neste navegador.</p>
+    <div class="search-field modal-search">
+      <input id="passInput" type="password" placeholder="Senha" autocomplete="current-password">
+    </div>
+    <p class="modal-hint" id="passError" style="color:#b5460f;" hidden>Senha incorreta. Tente de novo.</p>
+    <div class="modal-foot">
+      <span></span>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="passSubmit" type="button">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const KITS = []; // populated from /api/kits on load
+
+const grid = document.getElementById('grid');
+const empty = document.getElementById('empty');
+const searchInput = document.getElementById('search');
+const countEl = document.getElementById('count');
+const filterButtons = document.querySelectorAll('#filters .chip');
+const tabButtons = document.querySelectorAll('#tabs .chip');
+const kitsView = document.getElementById('kitsView');
+const summaryView = document.getElementById('summaryView');
+const filtersChips = document.getElementById('filters');
+const sumList = document.getElementById('sumList');
+const sumEmpty = document.getElementById('sumEmpty');
+const summaryHint = document.getElementById('summaryHint');
+
+let activeFilter = 'on';
+let activeView = 'kits';
+
+function normalize(s) {
+  return (s || '').toString().normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+}
+
+function fmtNum(n) {
+  if (n === null || n === undefined) return '&ndash;';
+  return Number.isInteger(n) ? String(n) : String(n);
+}
+
+function highlight(text, q) {
+  if (!q) return text;
+  const norm = normalize(text);
+  const nq = normalize(q);
+  const idx = norm.indexOf(nq);
+  if (idx === -1) return text;
+  return text.slice(0, idx) + '<mark>' + text.slice(idx, idx + q.length) + '</mark>' + text.slice(idx + q.length);
+}
+
+function kitMatches(kit, q) {
+  if (!q) return true;
+  const nq = normalize(q);
+  if (normalize(kit.produto).includes(nq) || normalize(kit.codigo).includes(nq)) return true;
+  return kit.itens.some(it => normalize(it.ingrediente).includes(nq) || normalize(it.corte).includes(nq));
+}
+
+function itemMatches(it, q) {
+  if (!q) return true;
+  const nq = normalize(q);
+  return normalize(it.ingrediente).includes(nq) || normalize(it.corte).includes(nq);
+}
+
+function render() {
+  const q = searchInput.value.trim();
+  grid.innerHTML = '';
+  let shown = 0;
+
+  KITS.forEach(kit => {
+    if (activeFilter === 'on' && !kit.ativo) return;
+    if (activeFilter === 'off' && kit.ativo) return;
+    if (!kitMatches(kit, q)) return;
+
+    shown++;
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const isMissing = kit.produto === 'Código não encontrado';
+    const produtoLabel = isMissing
+      ? kit.codigo + '<span class="miss">Produto não localizado na planilha</span>'
+      : highlight(kit.produto, q);
+
+    const itemsHtml = kit.itens
+      .filter(it => !q || kitMatchesButShowAll(kit, q) || itemMatches(it, q))
+      .map(it => `
+        <div class="item">
+          <div class="item-name">
+            <span class="ing">${highlight(it.ingrediente, q)}</span>
+            <span class="corte">${highlight(it.corte || '', q)}</span>
+          </div>
+          <div class="item-stats">
+            <span>${fmtNum(it.g_unid)}g</span>
+            <span>${fmtNum(it.qtd)}</span>
+            <span class="tot">${fmtNum(it.total)}g</span>
+          </div>
+        </div>`).join('');
+
+    card.innerHTML = `
+      <div class="card-head">
+        <div class="card-head-top">
+          <span class="code">${kit.codigo}</span>
+          <span class="status ${kit.ativo ? 'on' : 'off'}">${kit.ativo ? 'Em produção' : 'Zerado'}</span>
+        </div>
+        <p class="produto">${produtoLabel}</p>
+        <div class="meta-line">
+          <span>${kit.itens.length} ${kit.itens.length === 1 ? 'ingrediente' : 'ingredientes'}</span>
+          <span>&middot;</span>
+          <span>${fmtNum(kit.total_kit)} g no total</span>
+        </div>
+      </div>
+      <div class="col-labels">
+        <span>Ingrediente / corte</span>
+        <div class="r"><span>g/un</span><span>qtd</span><span>total</span></div>
+      </div>
+      <div class="items">${itemsHtml}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  countEl.textContent = shown + ' de ' + KITS.length + ' kits';
+  empty.style.display = shown === 0 ? 'block' : 'none';
+  grid.style.display = shown === 0 ? 'none' : 'grid';
+}
+
+// when searching, if the query only matches the kit name (not a specific
+// ingredient), show every ingredient row rather than filtering them out
+function kitMatchesButShowAll(kit, q) {
+  const nq = normalize(q);
+  return normalize(kit.produto).includes(nq) || normalize(kit.codigo).includes(nq);
+}
+
+// ---------- Ingredient summary (somatória entre todos os kits) ----------
+
+function buildSummaryRows() {
+  const byKey = new Map();
+  KITS.forEach(kit => {
+    if (!kit.ativo) return; // só kits em produção
+    kit.itens.forEach(it => {
+      if (!it.total) return; // só itens que de fato vão ser usados
+      const key = it.ingrediente;
+      if (!byKey.has(key)) {
+        byKey.set(key, { ingrediente: it.ingrediente, total: 0, entries: [] });
+      }
+      const row = byKey.get(key);
+      row.total += (it.total || 0);
+      row.entries.push({
+        codigo: kit.codigo,
+        produto: kit.produto,
+        corte: it.corte,
+        qtd: it.qtd,
+        g_unid: it.g_unid,
+        total: it.total
+      });
+    });
+  });
+  return Array.from(byKey.values()).sort((a, b) => b.total - a.total);
+}
+
+// normalizes a corte string for grouping: strips accents/case (like normalize())
+// and also collapses Portuguese gender-agreement endings so "Ralada" and "Ralado"
+// (or "Picada"/"Picado", "Fatiada"/"Fatiado"...) are treated as the same corte
+function corteGroupKey(corte) {
+  const n = normalize(corte || '');
+  return n.replace(/(\w+?)ad[ao]\b/g, '$1ad');
+}
+
+// groups one ingredient row's kit-entries by corte, with a subtotal per corte
+// (used in "Ingrediente geral" mode, where a row spans multiple cortes).
+// Cortes that only differ by gender agreement (Ralada/Ralado) are merged into
+// one group, showing both spellings in the header, so the person cutting sees
+// the combined amount for that cut in one place.
+function groupEntriesByCorte(entries) {
+  const byKey = new Map();
+  entries.forEach(e => {
+    const raw = e.corte || '';
+    const key = corteGroupKey(raw) || '(sem corte)';
+    if (!byKey.has(key)) {
+      byKey.set(key, { labels: new Set(), total: 0, entries: [] });
+    }
+    const g = byKey.get(key);
+    if (raw) g.labels.add(raw);
+    g.total += (e.total || 0);
+    g.entries.push(e);
+  });
+  return Array.from(byKey.values())
+    .map(g => ({
+      corte: g.labels.size ? Array.from(g.labels).sort().join(' / ') : 'Sem corte especificado',
+      total: g.total,
+      entries: g.entries
+    }))
+    .sort((a, b) => b.total - a.total);
+}
+
+function renderSummary() {
+  const q = searchInput.value.trim();
+  const nq = normalize(q);
+  const rows = buildSummaryRows().filter(row => {
+    if (!q) return true;
+    return normalize(row.ingrediente).includes(nq) || (row.corte && normalize(row.corte).includes(nq));
+  });
+
+  sumList.innerHTML = '';
+  rows.forEach(row => {
+    const kitsCount = new Set(row.entries.map(e => e.codigo)).size;
+    const el = document.createElement('div');
+    el.className = 'sum-row';
+    el.innerHTML = `
+      <div class="sum-row-main">
+        <div class="sum-name">
+          <span class="ing">${highlight(row.ingrediente, q)}</span>
+          <span class="used">usado em ${kitsCount} ${kitsCount === 1 ? 'kit' : 'kits'}</span>
+        </div>
+        <div class="sum-right">
+          <span class="sum-total">${fmtNum(row.total)}g</span>
+          <svg class="sum-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="sum-breakdown">
+        ${groupEntriesByCorte(row.entries).map(g => `
+          <div class="bd-corte-group">
+            <div class="bd-corte-head">
+              <span>${highlight(g.corte, q)}</span>
+              <span class="bd-corte-total">${fmtNum(g.total)}g</span>
+            </div>
+            ${g.entries.map(e => `
+              <div class="bd-row">
+                <span class="bd-kit"><b>${e.codigo}</b> &middot; ${e.produto}</span>
+                <span class="bd-val">${fmtNum(e.qtd)}&nbsp;&times;&nbsp;${fmtNum(e.g_unid)}g = ${fmtNum(e.total)}g</span>
+              </div>`).join('')}
+          </div>`).join('')}
+      </div>
+    `;
+    el.querySelector('.sum-row-main').addEventListener('click', () => el.classList.toggle('open'));
+    sumList.appendChild(el);
+  });
+
+  countEl.textContent = rows.length + ' ' + (rows.length === 1 ? 'ingrediente' : 'ingredientes');
+  sumEmpty.style.display = rows.length === 0 ? 'block' : 'none';
+  sumList.style.display = rows.length === 0 ? 'none' : 'flex';
+}
+
+function renderCurrent() {
+  if (activeView === 'kits') {
+    kitsView.hidden = false;
+    summaryView.hidden = true;
+    filtersChips.hidden = false;
+    summaryHint.hidden = true;
+    render();
+  } else {
+    kitsView.hidden = true;
+    summaryView.hidden = false;
+    filtersChips.hidden = true;
+    summaryHint.hidden = false;
+    renderSummary();
+  }
+}
+
+searchInput.addEventListener('input', renderCurrent);
+
+filterButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterButtons.forEach(b => b.setAttribute('aria-pressed', 'false'));
+    btn.setAttribute('aria-pressed', 'true');
+    activeFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabButtons.forEach(b => b.setAttribute('aria-pressed', 'false'));
+    btn.setAttribute('aria-pressed', 'true');
+    activeView = btn.dataset.view;
+    searchInput.placeholder = activeView === 'kits' ? 'Buscar por kit ou ingrediente…' : 'Buscar um ingrediente…';
+    renderCurrent();
+  });
+});
+
+renderCurrent();
+
+function updateStats() {
+  const distinctIng = new Set();
+  KITS.forEach(k => k.itens.forEach(it => distinctIng.add(it.ingrediente)));
+  const ativos = KITS.filter(k => k.ativo).length;
+  const elKits = document.getElementById('statKits');
+  const elIng = document.getElementById('statIng');
+  const elAtivos = document.getElementById('statAtivos');
+  if (elKits) elKits.textContent = KITS.length;
+  if (elIng) elIng.textContent = distinctIng.size;
+  if (elAtivos) elAtivos.textContent = ativos;
+}
+
+// ---------- Backend integration: loads/saves state via the API instead of
+// Claude's self-publish capability (this is the standalone/Vercel build) ----------
+
+const ADMIN_KEY_STORAGE = 'danielli-kits-admin-key';
+
+function round2(n) {
+  return Math.round((n + Number.EPSILON) * 100) / 100;
+}
+
+function getStoredAdminKey() {
+  try { return localStorage.getItem(ADMIN_KEY_STORAGE) || ''; } catch (e) { return ''; }
+}
+
+function setStoredAdminKey(key) {
+  try { localStorage.setItem(ADMIN_KEY_STORAGE, key); } catch (e) { /* ignore */ }
+}
+
+function clearStoredAdminKey() {
+  try { localStorage.removeItem(ADMIN_KEY_STORAGE); } catch (e) { /* ignore */ }
+}
+
+const toolbar = document.getElementById('toolbar');
+const toolbarStatus = document.getElementById('toolbarStatus');
+const readonlyHint = document.getElementById('readonlyHint');
+const btnLancar = document.getElementById('btnLancar');
+const btnZerar = document.getElementById('btnZerar');
+
+function setToolbarBusy(busy, msg) {
+  if (btnLancar) btnLancar.disabled = busy;
+  if (btnZerar) btnZerar.disabled = busy;
+  if (toolbarStatus) toolbarStatus.textContent = msg || '';
+}
+
+// ---------- Admin password prompt (kept locally, per device, in localStorage) ----------
+
+const passOverlay = document.getElementById('passOverlay');
+const passInput = document.getElementById('passInput');
+const passCancel = document.getElementById('passCancel');
+const passSubmit = document.getElementById('passSubmit');
+const passError = document.getElementById('passError');
+let pendingAction = null; // function to run once a password is available
+
+function openPasswordPrompt(action) {
+  pendingAction = action;
+  if (passError) passError.hidden = true;
+  if (passInput) passInput.value = '';
+  if (passOverlay) passOverlay.hidden = false;
+  if (passInput) passInput.focus();
+}
+
+function closePasswordPrompt() {
+  if (passOverlay) passOverlay.hidden = true;
+  pendingAction = null;
+}
+
+if (passCancel) passCancel.addEventListener('click', closePasswordPrompt);
+if (passOverlay) passOverlay.addEventListener('click', e => {
+  if (e.target === passOverlay) closePasswordPrompt();
+});
+if (passSubmit) passSubmit.addEventListener('click', () => {
+  const key = passInput ? passInput.value.trim() : '';
+  if (!key) return;
+  setStoredAdminKey(key);
+  const action = pendingAction;
+  closePasswordPrompt();
+  if (action) action();
+});
+if (passInput) passInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') passSubmit && passSubmit.click();
+});
+
+// ---------- API calls ----------
+
+async function apiGetKits() {
+  const res = await fetch('/api/kits');
+  if (!res.ok) throw new Error('fetch_failed');
+  const data = await res.json();
+  return data.kits;
+}
+
+async function apiWrite(path, body) {
+  const key = getStoredAdminKey();
+  const res = await fetch(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-admin-key': key },
+    body: JSON.stringify(body || {})
+  });
+  if (res.status === 401) {
+    clearStoredAdminKey();
+    const err = new Error('unauthorized');
+    err.code = 'unauthorized';
+    throw err;
+  }
+  if (!res.ok) {
+    const err = new Error('request_failed');
+    err.code = 'request_failed';
+    throw err;
+  }
+  const data = await res.json();
+  return data.kits;
+}
+
+function runProtected(action) {
+  const key = getStoredAdminKey();
+  if (!key) { openPasswordPrompt(action); return; }
+  action();
+}
+
+async function loadKitsFromServer() {
+  try {
+    const kits = await apiGetKits();
+    KITS.length = 0;
+    kits.forEach(k => KITS.push(k));
+    updateStats();
+    renderCurrent();
+    if (toolbar) toolbar.hidden = false;
+  } catch (e) {
+    setToolbarBusy(false, 'Não foi possível carregar os dados agora.');
+  }
+}
+
+// ---------- Zerar produção do dia ----------
+
+const confirmZerar = document.getElementById('confirmZerar');
+const confirmZerarCancel = document.getElementById('confirmZerarCancel');
+const confirmZerarOk = document.getElementById('confirmZerarOk');
+
+if (btnZerar) btnZerar.addEventListener('click', () => {
+  if (confirmZerar) confirmZerar.hidden = false;
+});
+if (confirmZerarCancel) confirmZerarCancel.addEventListener('click', () => {
+  if (confirmZerar) confirmZerar.hidden = true;
+});
+if (confirmZerarOk) confirmZerarOk.addEventListener('click', () => {
+  if (confirmZerar) confirmZerar.hidden = true;
+  runProtected(() => doZerar());
+});
+
+async function doZerar() {
+  setToolbarBusy(true, 'Salvando…');
+  try {
+    const kits = await apiWrite('/api/kits/zerar', {});
+    KITS.length = 0;
+    kits.forEach(k => KITS.push(k));
+    updateStats();
+    renderCurrent();
+    setToolbarBusy(false, 'Produção zerada.');
+    setTimeout(() => setToolbarBusy(false, ''), 2500);
+  } catch (err) {
+    if (err.code === 'unauthorized') {
+      setToolbarBusy(false, 'Senha incorreta.');
+      openPasswordPrompt(() => doZerar());
+      return;
+    }
+    setToolbarBusy(false, 'Não foi possível salvar agora. Tente de novo.');
+  }
+}
+
+// ---------- Lançar pedido ----------
+
+const modalOverlay = document.getElementById('modalOverlay');
+const modalList = document.getElementById('modalList');
+const modalSearch = document.getElementById('modalSearch');
+const modalCount = document.getElementById('modalCount');
+const modalClose = document.getElementById('modalClose');
+const modalCancel = document.getElementById('modalCancel');
+const modalSubmit = document.getElementById('modalSubmit');
+
+let pedidoQtys = {};
+
+function pedidoItemCount() {
+  return Object.keys(pedidoQtys).filter(c => pedidoQtys[c] > 0).length;
+}
+
+function renderModalList() {
+  if (!modalList) return;
+  const q = modalSearch ? modalSearch.value.trim() : '';
+  const nq = normalize(q);
+  modalList.innerHTML = '';
+  let shown = 0;
+  KITS.forEach(kit => {
+    if (q && !normalize(kit.produto).includes(nq) && !normalize(kit.codigo).includes(nq)) return;
+    shown++;
+    const qty = pedidoQtys[kit.codigo] || 0;
+    const row = document.createElement('div');
+    row.className = 'modal-item';
+    row.innerHTML = `
+      <div class="modal-item-name">
+        <span class="code-sm">${kit.codigo}</span>
+        <span class="mi-produto">${highlight(kit.produto, q)}</span>
+        ${kit.ativo ? `<span class="mi-current">${kit.qtd_kit} un. já em produção hoje</span>` : ''}
+      </div>
+      <div class="stepper">
+        <button type="button" class="step-btn" data-action="dec" data-codigo="${kit.codigo}" aria-label="Diminuir">&minus;</button>
+        <span class="step-val" data-qtyfor="${kit.codigo}">${qty}</span>
+        <button type="button" class="step-btn" data-action="inc" data-codigo="${kit.codigo}" aria-label="Aumentar">&plus;</button>
+      </div>
+    `;
+    modalList.appendChild(row);
+  });
+  if (modalCount) {
+    const n = pedidoItemCount();
+    modalCount.textContent = shown + ' produtos' + (n ? ' · ' + n + ' no pedido' : '');
+  }
+}
+
+if (modalList) modalList.addEventListener('click', e => {
+  const btn = e.target.closest('.step-btn');
+  if (!btn) return;
+  const codigo = btn.dataset.codigo;
+  let qty = pedidoQtys[codigo] || 0;
+  if (btn.dataset.action === 'inc') qty = Math.min(999, qty + 1);
+  if (btn.dataset.action === 'dec') qty = Math.max(0, qty - 1);
+  pedidoQtys[codigo] = qty;
+  const valEl = modalList.querySelector(`[data-qtyfor="${CSS.escape(codigo)}"]`);
+  if (valEl) valEl.textContent = qty;
+  if (modalCount) {
+    const n = pedidoItemCount();
+    modalCount.textContent = modalList.children.length + ' produtos' + (n ? ' · ' + n + ' no pedido' : '');
+  }
+});
+
+if (modalSearch) modalSearch.addEventListener('input', renderModalList);
+
+function openModal() {
+  pedidoQtys = {};
+  if (modalSearch) modalSearch.value = '';
+  renderModalList();
+  if (modalOverlay) modalOverlay.hidden = false;
+  if (modalSearch) modalSearch.focus();
+}
+
+function closeModal() {
+  if (modalOverlay) modalOverlay.hidden = true;
+}
+
+if (btnLancar) btnLancar.addEventListener('click', openModal);
+if (modalClose) modalClose.addEventListener('click', closeModal);
+if (modalCancel) modalCancel.addEventListener('click', closeModal);
+if (modalOverlay) modalOverlay.addEventListener('click', e => {
+  if (e.target === modalOverlay) closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (modalOverlay && !modalOverlay.hidden) closeModal();
+    if (passOverlay && !passOverlay.hidden) closePasswordPrompt();
+  }
+});
+
+if (modalSubmit) modalSubmit.addEventListener('click', () => {
+  const codigos = Object.keys(pedidoQtys).filter(c => pedidoQtys[c] > 0);
+  if (!codigos.length) { closeModal(); return; }
+  const items = {};
+  codigos.forEach(c => { items[c] = pedidoQtys[c]; });
+  closeModal();
+  runProtected(() => doLancar(items));
+});
+
+async function doLancar(items) {
+  setToolbarBusy(true, 'Salvando…');
+  try {
+    const kits = await apiWrite('/api/kits/lancar', { items });
+    KITS.length = 0;
+    kits.forEach(k => KITS.push(k));
+    updateStats();
+    renderCurrent();
+    setToolbarBusy(false, 'Pedido lançado.');
+    setTimeout(() => setToolbarBusy(false, ''), 2500);
+  } catch (err) {
+    if (err.code === 'unauthorized') {
+      setToolbarBusy(false, 'Senha incorreta.');
+      openPasswordPrompt(() => doLancar(items));
+      return;
+    }
+    setToolbarBusy(false, 'Não foi possível salvar agora. Tente de novo.');
+  }
+}
+
+// ---------- Boot ----------
+
+loadKitsFromServer();
+</script>
+</body>
+</html>
